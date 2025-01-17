@@ -1,0 +1,190 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#particleCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.container {
+    text-align: center;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+h1 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+}
+    .roulette-container {
+    position: relative;
+    width: 700px;
+    height: 700px;
+    margin: 20px auto;
+    }
+
+    .marker {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-top: 60px solid #e74c3c;
+    z-index: 2;
+    }
+
+.wheel {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 50%;
+    border: 20px solid #2c3e50;
+    overflow: hidden;
+    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+    box-shadow: 0 0 30px rgba(0,0,0,0.2);
+    background-color: white;
+}
+
+.wheel-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-origin: center;
+}
+
+.wheel-item {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    transform-origin: 100% 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    padding-bottom: 50%;
+    user-select: none;
+    cursor: default;
+}
+
+.wheel-text {
+    position: absolute;
+    transform-origin: center;
+    width: 120px;
+    text-align: right;
+    right: 80%;
+    padding-right: 20px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    left: 0;
+    bottom: 40px;
+}
+
+button {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    font-size: 1.5em;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 20px 0;
+    margin-top: 100px;
+}
+
+button:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+button:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+}
+
+@keyframes shuffle {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes winner {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+#result {
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+#result div {
+    text-align: center;
+}
+
+@media (max-width: 800px) {
+    .roulette-container {
+        width: 90vw;
+        height: 90vw;
+        max-width: 500px;
+        max-height: 500px;
+    }
+
+    .wheel-item {
+        font-size: 14px;
+    }
+
+    .wheel-text {
+        width: 80px;
+        right: 75%;
+    }
+
+    .marker {
+        top: -20px;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-top: 40px solid #e74c3c;
+    }
+}
