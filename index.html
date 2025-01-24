@@ -3,15 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>17명 랜덤 뽑기</title>
+    <title>행운의 룰렛 게임</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <canvas id="particleCanvas"></canvas>
     <div class="container">
-        <h1>🎯 랜덤 뽑기 🎯</h1>
-        <button id="spinButton" onclick="selectRandom()">뽑기 시작</button>
-        <div id="result"></div>
+        <h1>🎰 행운의 룰렛 🎰</h1>
+        <div class="roulette-container">
+            <canvas id="rouletteWheel"></canvas>
+            <div class="controls">
+                <button id="spinButton" class="spin-button">룰렛 돌리기</button>
+                <div id="result" class="result-display"></div>
+            </div>
+        </div>
+        <div class="prize-list">
+            <h3>상품 목록</h3>
+            <ul id="prizeList"></ul>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

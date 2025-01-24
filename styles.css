@@ -5,13 +5,14 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
+    margin: 0;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    min-height: 100vh;
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    font-family: 'Arial', sans-serif;
 }
 
 #particleCanvas {
@@ -26,24 +27,100 @@ body {
 
 .container {
     text-align: center;
-    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+    width: 90%;
     position: relative;
     z-index: 1;
 }
 
 h1 {
     color: #2c3e50;
-    margin-bottom: 30px;
-    font-size: 2.5em;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
 }
-    .roulette-container {
-    position: relative;
-    width: 700px;
-    height: 700px;
-    margin: 20px auto;
-    }
 
-    .marker {
+.roulette-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
+
+#rouletteWheel {
+    max-width: 500px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.controls {
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.spin-button {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.spin-button:hover {
+    background: #c0392b;
+    transform: scale(1.05);
+}
+
+.spin-button:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+}
+
+.result-display {
+    margin-top: 1.5rem;
+    font-size: 1.8rem;
+    color: #2c3e50;
+    font-weight: bold;
+    padding: 1rem;
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.prize-list {
+    margin-top: 2rem;
+    text-align: left;
+    width: 100%;
+}
+
+.prize-list h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+#prizeList {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+#prizeList li {
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 5px;
+    color: #34495e;
+    text-align: center;
+}
+
+.marker {
     position: absolute;
     top: -30px;
     left: 50%;
@@ -54,7 +131,7 @@ h1 {
     border-right: 30px solid transparent;
     border-top: 60px solid #e74c3c;
     z-index: 2;
-    }
+}
 
 .wheel {
     width: 100%;
@@ -101,30 +178,6 @@ h1 {
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
     left: 0;
     bottom: 40px;
-}
-
-button {
-    background: #3498db;
-    color: white;
-    border: none;
-    padding: 20px 40px;
-    font-size: 1.5em;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin: 20px 0;
-    margin-top: 100px;
-}
-
-button:hover {
-    background: #2980b9;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-button:disabled {
-    background: #bdc3c7;
-    cursor: not-allowed;
 }
 
 @keyframes shuffle {

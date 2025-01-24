@@ -1,151 +1,151 @@
-const participants = [
-    "참가자 1", "참가자 2", "참가자 3", "참가자 4",
-    "참가자 5", "참가자 6", "참가자 7", "참가자 8",
-    "참가자 9", "참가자 10", "참가자 11", "참가자 12",
-    "참가자 13", "참가자 14", "참가자 15", "참가자 16",
-    "참가자 17"
-];
-
-const colors = [
-    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4',
-    '#FF8C94', '#9B59B6', '#3498DB', '#F0A500',
-    '#957DAD', '#D4A5A5', '#95E1D3', '#FFB6B9',
-    '#9EECFF', '#A8E6CF', '#FFEEAD', '#D4A5A5',
-    '#FF7171'
-];
-
-let isSelecting = false;
-let particles = [];
-const particleCanvas = document.getElementById('particleCanvas');
-const ctx = particleCanvas.getContext('2d');
-
-class Particle {
+class RouletteWheel {
     constructor() {
-        this.x = Math.random() * window.innerWidth;
-        this.y = Math.random() * window.innerHeight;
-        this.size = Math.random() * 5 + 2;
-        this.speedX = Math.random() * 6 - 3;
-        this.speedY = Math.random() * 6 - 3;
-        this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
-    }
-
-    update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.size > 0.2) this.size -= 0.1;
-    }
-
-    draw() {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-    }
-}
-
-window.onload = function() {
-    createWheel();
-};
-
-function createWheel() {
-    const wheelInner = document.getElementById('wheelInner');
-    const angle = 360 / participants.length;
-
-    participants.forEach((participant, index) => {
-        const item = document.createElement('div');
-        item.className = 'wheel-item';
-
-        const textDiv = document.createElement('div');
-        textDiv.className = 'wheel-text';
-        textDiv.textContent = participant;
-        textDiv.style.transform = `rotate(${-(angle * index + angle/2)}deg)`;
-
-        item.appendChild(textDiv);
-        item.style.backgroundColor = colors[index];
-        item.style.transform = `rotate(${angle * index}deg)`;
-        wheelInner.appendChild(item);
-    });
-}
-
-function animateParticles() {
-    ctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-    
-    particles.forEach((particle, index) => {
-        particle.update();
-        particle.draw();
+        this.canvas = document.getElementById('rouletteWheel');
+        this.ctx = this.canvas.getContext('2d');
+        this.participants = [
+            '참가자1', '참가자2', '참가자3', '참가자4', '참가자5',
+            '참가자6', '참가자7', '참가자8', '참가자9', '참가자10',
+            '참가자11', '참가자12', '참가자13', '참가자14', '참가자15',
+            '참가자16', '참가자17'
+        ];
+        this.colors = [
+            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD',
+            '#D4A5A5', '#9B59B6', '#3498DB', '#E74C3C', '#2ECC71',
+            '#F1C40F', '#1ABC9C', '#E67E22', '#9B59B6', '#34495E',
+            '#16A085', '#D35400'
+        ];
+        this.currentRotation = 0;
+        this.isSpinning = false;
         
-        if (particle.size <= 0.2) {
-            particles.splice(index, 1);
-        }
-    });
-
-    if (particles.length > 0) {
-        requestAnimationFrame(animateParticles);
-    } else {
-        ctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+        this.init();
+        this.setupEventListeners();
     }
-}
-function resizeCanvas() {
-    particleCanvas.width = window.innerWidth;
-    particleCanvas.height = window.innerHeight;
-}
 
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-
-function createParticles() {
-    for (let i = 0; i < 100; i++) {
-        particles.push(new Particle());
+    init() {
+        this.canvas.width = 500; // 크기 증가
+        this.canvas.height = 500;
+        this.drawWheel();
+        this.displayParticipantList();
     }
-    animateParticles();
-}
 
-function selectRandom() {
-    if (isSelecting) return;
+    drawWheel() {
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+        const radius = Math.min(centerX, centerY) - 20;
+        const segments = this.participants.length;
+        
+        this.ctx.save();
+        this.ctx.translate(centerX, centerY);
+        this.ctx.rotate(this.currentRotation * Math.PI / 180); // 각도를 라디안으로 변환
 
-    const resultDiv = document.getElementById('result');
-    const button = document.getElementById('spinButton');
-    
-    isSelecting = true;
-    button.disabled = true;
+        // 각 세그먼트의 시작 위치를 조정 (첫 번째 세그먼트가 화살표 위치에 정확히 오도록)
+        const startAngle = -90 * Math.PI / 180; // 시작 각도를 -90도로 설정
 
-    const winnerIndex = Math.floor(Math.random() * participants.length);
-    let shuffleCount = 0;
-    const maxShuffles = 20;
-    const shuffleInterval = 50;
-
-    const shuffleEffect = setInterval(() => {
-        if (shuffleCount >= maxShuffles) {
-            clearInterval(shuffleEffect);
-            isSelecting = false;
-            button.disabled = false;
-            resultDiv.innerHTML = `
-                <div style="animation: winner 0.5s ease-out">
-                    <span style="font-size: 2.5em; color: #e74c3c">🎉 당첨자 🎉</span>
-                    <br>
-                    <span style="font-size: 3em; color: #2c3e50; text-shadow: 2px 2px 4px rgba(0,0,0,0.3)">
-                        ${participants[winnerIndex]}
-                    </span>
-                </div>
-            `;
-            createParticles();
-            return;
+        for (let i = 0; i < segments; i++) {
+            const angle = (2 * Math.PI) / segments;
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, 0);
+            this.ctx.arc(0, 0, radius, startAngle + (i * angle), startAngle + ((i + 1) * angle));
+            this.ctx.fillStyle = this.colors[i];
+            this.ctx.fill();
+            
+            // 텍스트 그리기
+            this.ctx.save();
+            this.ctx.rotate(startAngle + (i * angle) + (angle / 2));
+            this.ctx.textAlign = 'right';
+            this.ctx.fillStyle = 'white';
+            this.ctx.font = 'bold 14px Arial';
+            this.ctx.fillText(this.participants[i], radius - 30, 5);
+            this.ctx.restore();
         }
 
-        const randomIndex = Math.floor(Math.random() * participants.length);
-        resultDiv.innerHTML = `
-            <div style="animation: shuffle 0.1s ease-out">
-                <span style="font-size: 2em; color: #3498db">
-                    ${participants[randomIndex]}
-                </span>
-            </div>
-        `;
+        // 중앙 원 그리기
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, 20, 0, Math.PI * 2);
+        this.ctx.fillStyle = '#2c3e50';
+        this.ctx.fill();
+
+        this.ctx.restore();
+        this.drawArrow(centerX, centerY - radius);
+    }
+
+    drawArrow(x, y) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x - 15, y - 15);
+        this.ctx.lineTo(x, y);
+        this.ctx.lineTo(x + 15, y - 15);
+        this.ctx.fillStyle = '#2c3e50';
+        this.ctx.fill();
+    }
+
+    spin() {
+        if (this.isSpinning) return;
         
-        shuffleCount++;
+        this.isSpinning = true;
+        const spinDuration = 5000;
+        const startRotation = this.currentRotation;
+        const totalRotation = 360 * 8 + Math.random() * 360; // 8바퀴 + 랜덤
+        const startTime = performance.now();
+
+        const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / spinDuration, 1);
+            
+            const easeOut = (t) => 1 - Math.pow(1 - t, 4); // 부드러운 감속
+            const currentProgress = easeOut(progress);
+            
+            this.currentRotation = startRotation + (totalRotation * currentProgress);
+            this.drawWheel();
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                this.isSpinning = false;
+                this.showResult();
+            }
+        };
+
+        requestAnimationFrame(animate);
+    }
+
+    showResult() {
+        const segmentAngle = 360 / this.participants.length;
+        const normalizedRotation = ((this.currentRotation % 360) + 360) % 360;
         
-        if (shuffleCount > maxShuffles - 5) {
-            clearInterval(shuffleEffect);
-            setTimeout(() => shuffleEffect, shuffleInterval * 2);
+        // 기존 세그먼트 계산에서 4를 빼서 보정
+        let segment = Math.floor(((360 - normalizedRotation + 90) % 360) / segmentAngle) - 4;
+        
+        // 음수 인덱스 처리
+        if (segment < 0) {
+            segment = this.participants.length + segment;
         }
-    }, shuffleInterval);
+        
+        const winner = this.participants[segment];
+        document.getElementById('result').textContent = `🎉 당첨자: ${winner} 🎉`;
+        
+        // 디버깅용 정보
+        console.log({
+            normalizedRotation,
+            segmentAngle,
+            segment,
+            winner
+        });
+    }
+
+    displayParticipantList() {
+        const prizeList = document.getElementById('prizeList');
+        prizeList.innerHTML = ''; // 리스트 초기화
+        this.participants.forEach((participant, index) => {
+            const li = document.createElement('li');
+            li.textContent = `${index + 1}. ${participant}`;
+            prizeList.appendChild(li);
+        });
+    }
+
+    setupEventListeners() {
+        document.getElementById('spinButton').addEventListener('click', () => this.spin());
+    }
 }
+window.addEventListener('load', () => {
+    new RouletteWheel();
+});
