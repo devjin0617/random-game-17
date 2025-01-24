@@ -112,10 +112,8 @@ class RouletteWheel {
         const segmentAngle = 360 / this.participants.length;
         const normalizedRotation = ((this.currentRotation % 360) + 360) % 360;
         
-        // 기존 세그먼트 계산에서 4를 빼서 보정
         let segment = Math.floor(((360 - normalizedRotation + 90) % 360) / segmentAngle) - 4;
         
-        // 음수 인덱스 처리
         if (segment < 0) {
             segment = this.participants.length + segment;
         }
@@ -123,13 +121,68 @@ class RouletteWheel {
         const winner = this.participants[segment];
         document.getElementById('result').textContent = `🎉 당첨자: ${winner} 🎉`;
         
-        // 디버깅용 정보
-        console.log({
-            normalizedRotation,
-            segmentAngle,
-            segment,
-            winner
-        });
+        // 폭죽 효과 실행
+        this.launchFireworks();
+    }
+
+    launchFireworks() {
+        const duration = 5 * 1000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { 
+            startVelocity: 30, 
+            spread: 360, 
+            ticks: 60, 
+            zIndex: 0,
+            shapes: ['star', 'circle'],
+            colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+        };
+
+        // 폭죽 효과를 위한 캔버스 생성
+        const container = document.createElement('div');
+        container.style.position = 'fixed';
+        container.style.top = '0';
+        container.style.left = '0';
+        container.style.width = '100%';
+        container.style.height = '100%';
+        container.style.pointerEvents = 'none';
+        container.style.zIndex = '9999';
+        document.body.appendChild(container);
+
+        const interval = setInterval(() => {
+            const timeLeft = animationEnd - Date.now();
+
+            if (timeLeft <= 0) {
+                document.body.removeChild(container);
+                return clearInterval(interval);
+            }
+
+            const particleCount = 50 * (timeLeft / duration);
+
+            // 랜덤 위치에서 폭죽 발사
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            // 여러 방향에서 폭죽 발사
+            confetti({
+                ...defaults,
+                particleCount,
+                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+            });
+
+            confetti({
+                ...defaults,
+                particleCount,
+                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+            });
+
+            // 중앙에서도 폭죽 발사
+            confetti({
+                ...defaults,
+                particleCount: particleCount * 0.5,
+                origin: { x: 0.5, y: 0.3 }
+            });
+        }, 250);
     }
 
     displayParticipantList() {
